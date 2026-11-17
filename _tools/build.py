@@ -32,7 +32,7 @@ HEAD = """<!DOCTYPE html>
 <meta name="robots" content="index, follow">
 <meta property="og:type" content="{ogtype}">
 <meta property="og:locale" content="ru_RU">
-<meta property="og:site_name" content="Антон Синьков — маркетинг для медицинских клиник">
+<meta property="og:site_name" content="Агентство Антона Синькова">
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{desc}">
 <meta property="og:url" content="{url}">{ogimg}
@@ -47,11 +47,11 @@ HEAD = """<!DOCTYPE html>
 <body>
 <div class="w">
 <header class="top">
-<a class="logo" href="/">Антон Синьков</a>
-<nav><a href="/cases/">Кейсы</a><a href="/blog/">Блог</a><a class="btn-o" href="{tg}" target="_blank" rel="noopener">Написать</a></nav>
+<a class="logo" href="/">Агентство Антона Синькова</a>
+<nav><a href="/#services">Услуги</a><a href="/cases/">Кейсы</a><a href="/blog/">Блог</a><a class="btn-o" href="{tg}" target="_blank" rel="noopener">Написать</a></nav>
 </header>
 """
-FOOT = f"""<footer><span>© {AUTHOR}, маркетинг для медицинских клиник</span><span><a href="/">Главная</a> · <a href="/cases/">Кейсы</a> · <a href="/blog/">Блог</a> · <a href="{TG}" target="_blank" rel="noopener">Telegram</a> · <a href="{MAX}" target="_blank" rel="noopener">MAX</a> · <a href="{VC}" target="_blank" rel="noopener">vc.ru</a></span></footer>
+FOOT = f"""<footer><span>© Агентство Антона Синькова, маркетинг для медицинских клиник</span><span><a href="/">Главная</a> · <a href="/cases/">Кейсы</a> · <a href="/blog/">Блог</a> · <a href="{TG}" target="_blank" rel="noopener">Telegram</a> · <a href="{MAX}" target="_blank" rel="noopener">MAX</a> · <a href="{VC}" target="_blank" rel="noopener">vc.ru</a></span></footer>
 </div>
 </body>
 </html>
