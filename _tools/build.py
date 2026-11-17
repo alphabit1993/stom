@@ -3,6 +3,7 @@ import json, os, re, html, sys
 sys.path.insert(0, os.path.dirname(__file__))
 from cases import CASES as ARTICLES
 from posts import POSTS
+from services import SERVICES, CHOSEN
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = "https://sinkov-stom.ru"
@@ -51,7 +52,7 @@ HEAD = """<!DOCTYPE html>
 <nav><a href="/#services">Услуги</a><a href="/cases/">Кейсы</a><a href="/blog/">Блог</a><a class="btn-o" href="{tg}" target="_blank" rel="noopener">Написать</a></nav>
 </header>
 """
-FOOT = f"""<footer><span>© Агентство Антона Синькова, маркетинг для медицинских клиник</span><span><a href="/">Главная</a> · <a href="/cases/">Кейсы</a> · <a href="/blog/">Блог</a> · <a href="{TG}" target="_blank" rel="noopener">Telegram</a> · <a href="{MAX}" target="_blank" rel="noopener">MAX</a> · <a href="{VC}" target="_blank" rel="noopener">vc.ru</a></span></footer>
+FOOT = f"""<footer><span>© Агентство Антона Синькова, маркетинг для медицинских клиник</span><span><a href="/">Главная</a> · <a href="/#services">Услуги</a> · <a href="/cases/">Кейсы</a> · <a href="/blog/">Блог</a> · <a href="{TG}" target="_blank" rel="noopener">Telegram</a> · <a href="{MAX}" target="_blank" rel="noopener">MAX</a> · <a href="{VC}" target="_blank" rel="noopener">vc.ru</a></span></footer>
 </div>
 </body>
 </html>
@@ -197,11 +198,55 @@ def redirects():
         to = f"/cases/{a['slug']}/"
         open(f"{d}/index.html", "w").write(f'<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><title>Страница переехала</title><link rel="canonical" href="{SITE}{to}"><meta name="robots" content="noindex"><meta http-equiv="refresh" content="0; url={to}"><script>location.replace("{to}")</script></head><body><a href="{to}">Перейти к кейсу</a></body></html>')
 
+
+def service_pages():
+    LABEL = {"A": "Знакомо?", "B": "Результат", "C": "Коротко"}
+    for s in SERVICES:
+        k = CHOSEN[s["slug"]]; v = s["v"][k]
+        url = f"{SITE}/services/{s['slug']}/"
+        title = f"{s['name']} для медицинских клиник — Агентство Антона Синькова"
+        desc = (v["lead"][:157] + "…") if len(v["lead"]) > 160 else v["lead"]
+        inc = "".join(f"<div><b>{a}</b><span>{b}</span></div>" for a, b in s["includes"])
+        steps = "".join(f'<div><div class="n">{i+1}</div><b>{a}</b><span>{b}</span></div>' for i, (a, b) in enumerate(s["steps"]))
+        faq = "".join(f"<details><summary>{q}</summary><p>{x}</p></details>" for q, x in s["faq"])
+        case = ""
+        if s["case"]:
+            big, txt, link = s["case"]
+            more = f'<a class="btn-l" style="border-color:#FAF7F2;color:#FAF7F2" href="{link}">Смотреть кейс →</a>' if link else ""
+            case = f'<div class="after"><div><div class="l">Из практики</div><b>{big}</b><div style="font-weight:700;max-width:520px">{txt}</div></div>{more}</div>'
+        sec = f'<a class="btn-l" href="{s["case"][2]}">Смотреть кейс</a>' if s["case"] and s["case"][2] else '<a class="btn-l" href="/cases/">Смотреть кейсы</a>'
+        others = "".join(f'<a href="/services/{o["slug"]}/">{o["name"]}</a>' for o in SERVICES if o is not s)
+        ld = ldjson(
+            {"@context": "https://schema.org", "@type": "Service", "name": s["name"], "description": desc, "url": url, "areaServed": "RU", "audience": {"@type": "Audience", "audienceType": "Медицинские клиники"}, "provider": {"@type": "Organization", "name": "Агентство Антона Синькова", "url": SITE + "/"}},
+            {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
+                {"@type": "ListItem", "position": 1, "name": "Главная", "item": SITE + "/"},
+                {"@type": "ListItem", "position": 2, "name": "Услуги", "item": SITE + "/#services"},
+                {"@type": "ListItem", "position": 3, "name": s["name"], "item": url}]},
+            {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": x}} for q, x in s["faq"]]})
+        out = HEAD.format(title=esc(title), desc=esc(desc), url=url, ogtype="website", ogimg="", ld=ld, tg=TG)
+        out += f"""<div class="crumb"><a href="/#services">Услуги</a> / {s['name']}</div>
+<h1>{v['h1']}</h1>
+<p class="lead">{v['lead']}</p>
+<div class="hero-btns"><a class="btn-d" href="{TG}" target="_blank" rel="noopener">{v['cta']}</a>{sec}</div>
+{KNOT}
+<div class="intro"><div class="k">{LABEL[k]}</div><p>{v['intro']}</p></div>
+<h2 class="h2">Что входит</h2><div class="inc">{inc}</div>
+<h2 class="h2">Как работаем</h2><div class="steps">{steps}</div>
+{case}
+<section class="faq"><h2 id="faq" style="margin-top:88px">Частые вопросы</h2>{faq}</section>
+{contact().replace('Хотите так же? Напишите «Хочу разбор»', v['cta'])}
+<h2 class="u" style="font-size:22px;margin:64px 0 0">Другие услуги</h2><div class="others">{others}</div>
+"""
+        out += FOOT
+        d = f"{ROOT}/services/{s['slug']}"; os.makedirs(d, exist_ok=True)
+        open(f"{d}/index.html", "w").write(out)
+
 def sitemap():
     latest = "2026-11-17"
     urls = [(SITE + "/", latest, "1.0"), (SITE + "/analytics.html", latest, "0.6"), (SITE + "/cases/", latest, "0.8"), (SITE + "/blog/", latest, "0.8")]
     urls += [(f"{SITE}/cases/{a['slug']}/", latest, "0.7") for a in ARTICLES]
     urls += [(f"{SITE}/blog/{p['slug']}/", p["date"], "0.7") for p in POSTS]
+    urls += [(f"{SITE}/services/{s['slug']}/", latest, "0.9") for s in SERVICES]
     x = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
     x += "".join(f"  <url><loc>{u}</loc><lastmod>{d}</lastmod><priority>{p}</priority></url>\n" for u, d, p in urls)
     open(f"{ROOT}/sitemap.xml", "w").write(x + "</urlset>\n")
@@ -209,5 +254,6 @@ def sitemap():
 for i, a in enumerate(ARTICLES): article_page(a, i)
 list_page(); redirects(); blog_list()
 for i, p in enumerate(POSTS): blog_post(p, i)
+service_pages()
 sitemap()
 print("ok", len(ARTICLES))
