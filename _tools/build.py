@@ -38,7 +38,8 @@ HEAD = """<!DOCTYPE html>
 <meta property="og:description" content="{desc}">
 <meta property="og:url" content="{url}">{ogimg}
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="icon" type="image/svg+xml" href="/assets/brand/okupaemo-icon.svg">
+<link rel="apple-touch-icon" href="/assets/brand/okupaemo-icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -48,7 +49,7 @@ HEAD = """<!DOCTYPE html>
 <body>
 <div class="w">
 <header class="top">
-<a class="logo" href="/agency/">Агентство Антона Синькова</a>
+<a class="logo" href="/agency/" aria-label="окупаемо — на главную агентства"><img src="/assets/brand/okupaemo-logo.svg" alt="окупаемо — агентство Антона Синькова" width="200" height="28" style="height:28px;width:auto;display:block"></a>
 <nav><a href="/agency/#services">Услуги</a><a href="/cases/">Кейсы</a><a href="/blog/">Блог</a><a class="btn-o" href="{tg}" target="_blank" rel="noopener">Написать</a></nav>
 </header>
 """
