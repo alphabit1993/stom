@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /_tools/
 
 Sitemap: https://sinkov-stom.ru/sitemap.xml
