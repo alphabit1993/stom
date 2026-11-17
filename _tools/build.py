@@ -48,11 +48,11 @@ HEAD = """<!DOCTYPE html>
 <body>
 <div class="w">
 <header class="top">
-<a class="logo" href="/">Агентство Антона Синькова</a>
-<nav><a href="/#services">Услуги</a><a href="/cases/">Кейсы</a><a href="/blog/">Блог</a><a class="btn-o" href="{tg}" target="_blank" rel="noopener">Написать</a></nav>
+<a class="logo" href="/agency/">Агентство Антона Синькова</a>
+<nav><a href="/agency/#services">Услуги</a><a href="/cases/">Кейсы</a><a href="/blog/">Блог</a><a class="btn-o" href="{tg}" target="_blank" rel="noopener">Написать</a></nav>
 </header>
 """
-FOOT = f"""<footer><span>© Агентство Антона Синькова, маркетинг для медицинских клиник</span><span><a href="/">Главная</a> · <a href="/#services">Услуги</a> · <a href="/cases/">Кейсы</a> · <a href="/blog/">Блог</a> · <a href="{TG}" target="_blank" rel="noopener">Telegram</a> · <a href="{MAX}" target="_blank" rel="noopener">MAX</a> · <a href="{VC}" target="_blank" rel="noopener">vc.ru</a></span></footer>
+FOOT = f"""<footer><span>© Агентство Антона Синькова, маркетинг для медицинских клиник</span><span><a href="/agency/">Главная</a> · <a href="/agency/#services">Услуги</a> · <a href="/cases/">Кейсы</a> · <a href="/blog/">Блог</a> · <a href="{TG}" target="_blank" rel="noopener">Telegram</a> · <a href="{MAX}" target="_blank" rel="noopener">MAX</a> · <a href="{VC}" target="_blank" rel="noopener">vc.ru</a></span></footer>
 </div>
 </body>
 </html>
@@ -62,7 +62,7 @@ def ldjson(*objs):
 PERSON = {"@type": "Person", "name": AUTHOR, "url": SITE + "/", "sameAs": [TG, VC]}
 
 def contact():
-    return f"""<div class="contact"><div class="ph">[фото]</div><div style="flex:1 1 360px;min-width:0"><h2>Хотите так же? Напишите «Хочу разбор»</h2><p>{AUTHOR}, маркетинг для медицинских клиник. 20 минут, бесплатно — покажу, где ваша клиника теряет пациентов.</p></div><div class="pills"><a class="pill a" href="{TG}" target="_blank" rel="noopener">Telegram</a><a class="pill d" href="{MAX}" target="_blank" rel="noopener">MAX</a></div></div>"""
+    return f"""<div class="contact"><img class="ph" src="/assets/img/anton-sq.webp" alt="Антон Синьков" width="120" height="120" style="object-fit:cover"><div style="flex:1 1 360px;min-width:0"><h2>Хотите так же? Напишите «Хочу разбор»</h2><p>{AUTHOR}, маркетинг для медицинских клиник. 20 минут, бесплатно — покажу, где ваша клиника теряет пациентов.</p></div><div class="pills"><a class="pill a" href="{TG}" target="_blank" rel="noopener">Telegram</a><a class="pill d" href="{MAX}" target="_blank" rel="noopener">MAX</a></div></div>"""
 
 def article_page(a, i):
     url = f"{SITE}/cases/{a['slug']}/"
@@ -78,7 +78,7 @@ def article_page(a, i):
          "datePublished": a["date"], "dateModified": "2026-11-17", "inLanguage": "ru", "mainEntityOfPage": url, "url": url,
          "author": PERSON, "publisher": PERSON, **({"image": [SITE + x for x in imgs]} if imgs else {})},
         {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
-            {"@type": "ListItem", "position": 1, "name": "Главная", "item": SITE + "/"},
+            {"@type": "ListItem", "position": 1, "name": "Главная", "item": SITE + "/agency/"},
             {"@type": "ListItem", "position": 2, "name": "Кейсы", "item": SITE + "/cases/"},
             {"@type": "ListItem", "position": 3, "name": plain(a["h1"]), "item": url}]},
         {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [
@@ -171,7 +171,7 @@ def blog_post(p, i):
     ld = ldjson(
         {"@context": "https://schema.org", "@type": "BlogPosting", "headline": p["h1"], "description": p["description"], "datePublished": p["date"], "dateModified": p["date"], "inLanguage": "ru", "mainEntityOfPage": url, "url": url, "author": PERSON, "publisher": PERSON},
         {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
-            {"@type": "ListItem", "position": 1, "name": "Главная", "item": SITE + "/"},
+            {"@type": "ListItem", "position": 1, "name": "Главная", "item": SITE + "/agency/"},
             {"@type": "ListItem", "position": 2, "name": "Блог", "item": SITE + "/blog/"},
             {"@type": "ListItem", "position": 3, "name": p["h1"], "item": url}]},
         {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": x}} for q, x in p["faq"]]})
@@ -219,12 +219,12 @@ def service_pages():
         ld = ldjson(
             {"@context": "https://schema.org", "@type": "Service", "name": s["name"], "description": desc, "url": url, "areaServed": "RU", "audience": {"@type": "Audience", "audienceType": "Медицинские клиники"}, "provider": {"@type": "Organization", "name": "Агентство Антона Синькова", "url": SITE + "/"}},
             {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
-                {"@type": "ListItem", "position": 1, "name": "Главная", "item": SITE + "/"},
-                {"@type": "ListItem", "position": 2, "name": "Услуги", "item": SITE + "/#services"},
+                {"@type": "ListItem", "position": 1, "name": "Главная", "item": SITE + "/agency/"},
+                {"@type": "ListItem", "position": 2, "name": "Услуги", "item": SITE + "/agency/#services"},
                 {"@type": "ListItem", "position": 3, "name": s["name"], "item": url}]},
             {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": x}} for q, x in s["faq"]]})
         out = HEAD.format(title=esc(title), desc=esc(desc), url=url, ogtype="website", ogimg="", ld=ld, tg=TG)
-        out += f"""<div class="crumb"><a href="/#services">Услуги</a> / {s['name']}</div>
+        out += f"""<div class="crumb"><a href="/agency/#services">Услуги</a> / {s['name']}</div>
 <h1>{v['h1']}</h1>
 <p class="lead">{v['lead']}</p>
 <div class="hero-btns"><a class="btn-d" href="{TG}" target="_blank" rel="noopener">{v['cta']}</a>{sec}</div>
@@ -243,7 +243,7 @@ def service_pages():
 
 def sitemap():
     latest = "2026-11-17"
-    urls = [(SITE + "/", latest, "1.0"), (SITE + "/analytics.html", latest, "0.6"), (SITE + "/cases/", latest, "0.8"), (SITE + "/blog/", latest, "0.8")]
+    urls = [(SITE + "/", latest, "1.0"), (SITE + "/agency/", latest, "0.9"), (SITE + "/analytics.html", latest, "0.6"), (SITE + "/cases/", latest, "0.8"), (SITE + "/blog/", latest, "0.8")]
     urls += [(f"{SITE}/cases/{a['slug']}/", latest, "0.7") for a in ARTICLES]
     urls += [(f"{SITE}/blog/{p['slug']}/", p["date"], "0.7") for p in POSTS]
     urls += [(f"{SITE}/services/{s['slug']}/", latest, "0.9") for s in SERVICES]
